@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
             /*compressedImageView.setImageBitmap(Compressor.getDefault(this).compressToBitmap(actualImage));*/
 
             // Compress image using RxJava in background thread
-            Compressor.getDefault(this)
+            /*Compressor.getDefault(this)
                     .compressToFileAsObservable(actualImage)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -93,7 +93,19 @@ public class MainActivity extends AppCompatActivity {
                         public void accept(Throwable throwable) {
                             showError(throwable.getMessage());
                         }
-                    });
+                    });*/
+
+            // Compress image in main thread using custom Compressor
+            compressedImage = new Compressor.Builder(this)
+                    //.setMaxWidth(640)
+                    //.setMaxHeight(480)
+                    .setQuality(75)
+                    .setCompressFormat(Bitmap.CompressFormat.JPEG)
+                    .setDestinationDirectoryPath(Environment.getExternalStoragePublicDirectory(
+                            Environment.DIRECTORY_PICTURES).getAbsolutePath())
+                    .build()
+                    .compressToFile(actualImage);
+            setCompressedImage();
         }
     }
 
@@ -103,8 +115,8 @@ public class MainActivity extends AppCompatActivity {
         } else {
             // Compress image in main thread using custom Compressor
             compressedImage = new Compressor.Builder(this)
-                    .setMaxWidth(640)
-                    .setMaxHeight(480)
+                    //.setMaxWidth(640)
+                    //.setMaxHeight(480)
                     .setQuality(75)
                     .setCompressFormat(Bitmap.CompressFormat.WEBP)
                     .setDestinationDirectoryPath(Environment.getExternalStoragePublicDirectory(
