@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        // request permission Android Marshmallow Up
         if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= 23) {
             if ((PermissionChecker.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     != PermissionChecker.PERMISSION_GRANTED)) {
@@ -114,9 +114,7 @@ public class MainActivity extends AppCompatActivity {
             setCompressedImage();
             // result timing process
             bEnd = System.nanoTime() - bStart;
-            bDuration = (double)bEnd/1000000000.0; // convert to seconds unit
-            Toast.makeText(this, "TIME PROCESS: " + bDuration, Toast.LENGTH_LONG).show();
-            Log.d("TIME_PROCESS", Double.toString(bDuration));
+            getReadableTimeInSecondsUnit(bEnd);
         }
     }
 
@@ -139,9 +137,7 @@ public class MainActivity extends AppCompatActivity {
             setCompressedImage();
             // result timing process
             bEnd = System.nanoTime() - bStart;
-            bDuration = (double)bEnd/1000000000.0; // convert to seconds unit
-            Toast.makeText(this, "TIME PROCESS: " + bDuration, Toast.LENGTH_LONG).show();
-            Log.d("TIME_PROCESS", Double.toString(bDuration));
+            getReadableTimeInSecondsUnit(bEnd);
 
             // Compress image using RxJava in background thread with custom Compressor
            /* new Compressor.Builder(this)
@@ -221,5 +217,12 @@ public class MainActivity extends AppCompatActivity {
         final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
         int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
         return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+    }
+
+    private double getReadableTimeInSecondsUnit(long time) {
+        bDuration = (double)time/1000000000.0;
+        Toast.makeText(this, "TIME PROCESS: " + bDuration, Toast.LENGTH_LONG).show();
+        Log.d("TIME_PROCESS", Double.toString(bDuration));
+        return bDuration;
     }
 }
