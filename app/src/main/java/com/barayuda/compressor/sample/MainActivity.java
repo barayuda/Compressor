@@ -36,10 +36,12 @@ public class MainActivity extends AppCompatActivity {
     private ImageView compressedImageView;
     private TextView actualSizeTextView;
     private TextView compressedSizeTextView;
+    private TextView resultTimeProcessTextView;
     private File actualImage;
     private File compressedImage;
 
     private long bStart, bEnd;
+    private String bResult;
     private double bDuration;
 
     @Override
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         compressedImageView = (ImageView) findViewById(R.id.compressed_image);
         actualSizeTextView = (TextView) findViewById(R.id.actual_size);
         compressedSizeTextView = (TextView) findViewById(R.id.compressed_size);
+        resultTimeProcessTextView = (TextView) findViewById(R.id.result_timing_process);
 
         actualImageView.setBackgroundColor(getRandomColor());
         clearImage();
@@ -114,7 +117,9 @@ public class MainActivity extends AppCompatActivity {
             setCompressedImage();
             // result timing process
             bEnd = System.nanoTime() - bStart;
-            getReadableTimeInSecondsUnit(bEnd);
+            bResult = String.valueOf(getReadableTimeInSecondsUnit(bEnd));
+            // set result time process
+            resultTimeProcessTextView.setText(String.format("Time Process : %s seconds", bResult));
         }
     }
 
@@ -137,7 +142,9 @@ public class MainActivity extends AppCompatActivity {
             setCompressedImage();
             // result timing process
             bEnd = System.nanoTime() - bStart;
-            getReadableTimeInSecondsUnit(bEnd);
+            bResult = String.valueOf(getReadableTimeInSecondsUnit(bEnd));
+            // set result time process
+            resultTimeProcessTextView.setText(String.format("Time Process : %s seconds", bResult));
 
             // Compress image using RxJava in background thread with custom Compressor
            /* new Compressor.Builder(this)
@@ -179,6 +186,7 @@ public class MainActivity extends AppCompatActivity {
         compressedImageView.setImageDrawable(null);
         compressedImageView.setBackgroundColor(getRandomColor());
         compressedSizeTextView.setText("Size : -");
+        resultTimeProcessTextView.setText("Time Process: -");
     }
 
     @Override
