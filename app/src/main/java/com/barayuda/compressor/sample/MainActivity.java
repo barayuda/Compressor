@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import com.barayuda.compressor.Compressor;
 import com.barayuda.compressor.FileUtil;
@@ -37,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView compressedSizeTextView;
     private File actualImage;
     private File compressedImage;
+
+    private long bStart, bEnd;
+    private double bDuration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +99,8 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });*/
 
+            // start to timing process
+            bStart = System.nanoTime();
             // Compress image in main thread using custom Compressor
             compressedImage = new Compressor.Builder(this)
                     //.setMaxWidth(640)
@@ -106,6 +112,11 @@ public class MainActivity extends AppCompatActivity {
                     .build()
                     .compressToFile(actualImage);
             setCompressedImage();
+            // result timing process
+            bEnd = System.nanoTime() - bStart;
+            bDuration = (double)bEnd/1000000000.0; // convert to seconds unit
+            Toast.makeText(this, "TIME PROCESS: " + bDuration, Toast.LENGTH_LONG).show();
+            Log.d("TIME_PROCESS", Double.toString(bDuration));
         }
     }
 
@@ -113,6 +124,8 @@ public class MainActivity extends AppCompatActivity {
         if (actualImage == null) {
             showError("Please choose an image!");
         } else {
+            // start to timing process
+            bStart = System.nanoTime();
             // Compress image in main thread using custom Compressor
             compressedImage = new Compressor.Builder(this)
                     //.setMaxWidth(640)
@@ -124,6 +137,11 @@ public class MainActivity extends AppCompatActivity {
                     .build()
                     .compressToFile(actualImage);
             setCompressedImage();
+            // result timing process
+            bEnd = System.nanoTime() - bStart;
+            bDuration = (double)bEnd/1000000000.0; // convert to seconds unit
+            Toast.makeText(this, "TIME PROCESS: " + bDuration, Toast.LENGTH_LONG).show();
+            Log.d("TIME_PROCESS", Double.toString(bDuration));
 
             // Compress image using RxJava in background thread with custom Compressor
            /* new Compressor.Builder(this)
